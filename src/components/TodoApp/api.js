@@ -13,3 +13,17 @@ export const createItem = item => (
     },
   }).then(response => response.json())
 );
+
+export const subscribeToWebPush = subscription => (
+  fetch(`${host}/subscribe`, {
+    method: 'POST',
+    body: JSON.stringify(subscription),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+);
+
+export const getVapidPublicKey = () => (
+  fetch(`${host}/vapid_public_key`).then(response => response.json())
+);
