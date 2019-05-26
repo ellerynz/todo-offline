@@ -1,5 +1,5 @@
 /* global self, workbox */
-/* eslint-disable no-restricted-globals */
+/* eslint-disable no-restricted-globals, no-underscore-dangle */
 
 // See https://developers.google.com/web/tools/workbox/guides/configure-workbox
 workbox.core.setLogLevel(workbox.core.LOG_LEVELS.debug);
@@ -12,6 +12,22 @@ self.addEventListener('push', (event) => {
     body: text,
     icon: '/img/logo.82b9c7a5.png',
   });
+});
+
+// Offline queueing
+const queue = new workbox.backgroundSync.Queue('myQueueName');
+self.addEventListener('fetch', (event) => {
+  const regex = /:4567\/items.json/;
+  if (event.request.url.match(regex) && event.request.method === 'POST') {
+    // Clone the request to ensure it's save to read when adding to the Queue.
+    const promiseChain = fetch(event.request.clone())
+      .catch(() => {
+        console.log(queue);
+        return queue.addRequest(event.request);
+      });
+
+    event.waitUntil(promiseChain);
+  }
 });
 
 // Cache 3rd party assets
@@ -37,4 +53,4 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest || []);
 
 // app-shell
 workbox.routing.registerRoute('/', workbox.strategies.networkFirst());
-/* eslint-enable no-restricted-globals */
+/* eslint-enable no-restricted-globals, no-underscore-dangle */

@@ -57,4 +57,6 @@ if (process.env.NODE_ENV === 'production') {
       console.error('Error during service worker registration:', error);
     },
   });
+} else {
+  console.log('Not registering SW', process.env.NODE_ENV, process.env.BASE_URL);
 }

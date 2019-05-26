@@ -24,7 +24,6 @@ export default {
   methods: {
     updateConnectionStatus() {
       this.online = navigator.onLine;
-      // navigator.onLine && flushQueue();
     },
   },
   mounted() {
