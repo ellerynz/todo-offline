@@ -17,16 +17,15 @@ self.addEventListener('push', (event) => {
 // Offline queueing
 const queue = new workbox.backgroundSync.Queue('myQueueName');
 self.addEventListener('fetch', (event) => {
-  const regex = /:4567\/items.json/;
+  const regex = /items.json/;
   if (event.request.url.match(regex) && event.request.method === 'POST') {
     // Clone the request to ensure it's save to read when adding to the Queue.
     const promiseChain = fetch(event.request.clone())
       .catch(() => {
-        console.log(queue);
         return queue.addRequest(event.request);
       });
 
-    event.waitUntil(promiseChain);
+    return event.waitUntil(promiseChain);
   }
 });
 

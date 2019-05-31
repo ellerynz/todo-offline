@@ -6,7 +6,12 @@
       <TodoForm @item:added="addItem" />
       <ul>
         <li :key="item.id" v-for="item in todoItems">
-          <TodoListItem :id="item.id" :name="item.item" />
+          <TodoListItem
+            :id="item.id"
+            :name="item.item"
+            :pending="item.pending"
+            @item:deleted="deleteItem"
+          />
         </li>
       </ul>
       <p v-if="!todoItems.length">
@@ -17,7 +22,7 @@
 </template>
 
 <script>
-import { getItems, createItem } from './api';
+import { getItems, createItem, deleteItem } from './api';
 import TodoForm from './TodoForm.vue';
 import TodoListItem from './TodoListItem.vue';
 
@@ -34,9 +39,20 @@ export default {
   methods: {
     addItem(name) {
       const tempId = Date.now().toString();
-      const newItem = { id: tempId, item: name };
+      const newItem = { id: tempId, item: name, pending: true };
       this.todoItems = [newItem, ...this.todoItems];
       createItem(newItem)
+        .then((items) => {
+          this.todoItems = items.reverse();
+          console.log('after post');
+        })
+        .catch(() => {
+          console.log('you done messed up now');
+        });
+    },
+    deleteItem(id) {
+      this.todoItems.filter(item => item.id !== id);
+      deleteItem(id)
         .then((items) => {
           this.todoItems = items.reverse();
         })

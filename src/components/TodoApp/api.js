@@ -14,6 +14,17 @@ export const createItem = item => (
   }).then(response => response.json())
 );
 
+export const deleteItem = id => (
+  fetch(`${host}/items.json`, {
+    method: 'DELETE',
+    body: JSON.stringify({ id }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then(response => response.json())
+);
+
+
 export const subscribeToWebPush = subscription => (
   fetch(`${host}/subscribe`, {
     method: 'POST',

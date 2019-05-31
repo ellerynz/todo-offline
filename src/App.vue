@@ -1,18 +1,21 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Todo</router-link> |
-      <router-link to="/about">About</router-link>
     </div>
     <div v-show="offline">
       <h2>You are offline! Not everything will work</h2>
     </div>
-    <router-view/>
+    <Home />
   </div>
 </template>
 
 <script>
+import Home from './views/Home.vue';
+
 export default {
+  components: {
+    Home,
+  },
   data: () => ({
     online: true,
   }),
